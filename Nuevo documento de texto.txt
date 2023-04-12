@@ -1,0 +1,156 @@
+Requerimientos:
+Tengo un problema con este codigo, pues , el tiempo no lo debe digitar el usuario, el tiempo es aquel vehiculo con menor tiempo, que restara a los demas, y hasta que no se actualicen los tres peajes (se borre el elemento que contienen , pero en el caso como se borro ya un elemento de un peaje, este ya cuanta como actualizado, pero los demas no)  y se muestre su actualizacion (no solamente los elementos que fueron borrados) , ademas quiero que se impriman todos los elementos luego de que el usuario haya decidido no digitar mas, pero esta opcion solo se debe digitar una vez por el usuario, finalmente el codigo cuando elimina y quiere actualizar no funciona bien, cumple por favor con todos mis requerimientos
+Codigo:
+#include <iostream>
+#include<time.h>
+	using namespace std;
+	
+	/*
+	class Peaje{
+	char tipo_vh[10];
+	unsigned int tiempo;
+    Peaje*sig;
+    public:
+    *
+    *
+    *
+    Tiempo moto: 1-2seg;
+    ...    camion:3-5 seg;
+    ...    automovil: 2-4 seg;
+    
+}
+Primero que se se cree el nodo de encabezamiento de cada cola, se ingresa 
+	*/
+	class Peaje{
+		char tipo_vh[10];
+	unsigned int tiempo;
+	    int dato;
+	    Peaje *sig;
+	public:
+	    void crearNodoEncabezamiento(Peaje *&cab){
+	        cab=new Peaje;
+	        cab->dato=-1;
+	        cab->sig=NULL;
+	    }
+void agregarElemento(Peaje *&cab, char tipo_vh[]){
+    Peaje *aux=cab;
+    while(aux->sig)
+        aux=aux->sig;
+    aux->sig=new Peaje;
+    strcpy(aux->sig->tipo_vh, tipo_vh);
+    aux->sig->sig=NULL;
+}
+int reconocerElemento(Peaje *&cab, char tipo_vh[])
+{
+	int tiempo=0;
+	        // Generar tiempo de espera aleatorio
+        if (tipo_vh[0]== 'A') {
+            tiempo= rand() % 3 + 2;
+        } else if (tipo_vh[0]== 'M') {
+            tiempo=rand() % 2 + 1;
+        } else if (tipo_vh[0] == 'C') {
+            tiempo = rand() % 3 + 3;
+        }
+        return tiempo;
+}
+	    bool colaVacia(Peaje *cab){
+	        if(!cab->sig)
+	            return true;
+	        else
+	            return false;
+	    }
+	    char* retirarElemento(Peaje *&cab){
+    char tipo_vh[10];
+    if(colaVacia(cab)){
+        cout<< "Cola no posee elementos "<<endl;
+        return NULL;  
+    } else{
+        Peaje *aux=cab->sig;
+        cab->sig=aux->sig;
+        strcpy(tipo_vh, aux->tipo_vh);
+        delete aux;
+        return tipo_vh;
+    }
+}	     
+	    void mostrarElementos(Peaje *&cab){
+	        Peaje *aux=cab;
+	        aux=aux->sig;
+	        while(aux){
+	            cout<<aux->tipo_vh<<endl;
+	            aux=aux->sig;
+	        }
+	    }
+	};
+		int main(){
+    Peaje *cab1=NULL, *cab2=NULL, *cab3=NULL;
+    Peaje objeto1, objeto2, objeto3;
+    char tipovh[10];
+    int tiempo1=0, tiempo2=0, tiempo3=0,verif;
+    //Inicializamos los nodos de encabezamiento
+    objeto1.crearNodoEncabezamiento(cab1);
+    objeto2.crearNodoEncabezamiento(cab2);
+    objeto3.crearNodoEncabezamiento(cab3); 	
+    //Ahora para cada primera posición del cada peaje (cola) le asignamos un vehiculo
+	cout<<"Ingrese que tipo de vehiculo llega al peaje 1"<<endl;
+	cin.getline(tipovh,10);
+	objeto1.agregarElemento(cab1,tipovh);
+	tiempo1=objeto1.reconocerElemento(cab1,tipovh);
+		cout<<"Ingrese que tipo de vehiculo llega al peaje 2"<<endl;
+		cin.getline(tipovh,10);
+			objeto2.agregarElemento(cab2,tipovh);
+			tiempo2=objeto2.reconocerElemento(cab2,tipovh);
+			cout<<"Ingrese que tipo de vehiculo llega al peaje 3"<<endl;
+			cin.getline(tipovh,10);
+	objeto3.agregarElemento(cab3,tipovh);
+	tiempo3=objeto3.reconocerElemento(cab3,tipovh);
+	/*Mostramos los primeros datos para tener como referencia que ocupó la primera posición
+	de cada peaje (vehículo), ademas de mostrar su respectivo tiempo para analizar la logica */
+	cout<<"Peaje 1"<<endl;
+	objeto1.mostrarElementos(cab1);
+		cout<<"Peaje 2"<<endl;
+	objeto2.mostrarElementos(cab2);
+		cout<<"Peaje 3"<<endl;
+	objeto3.mostrarElementos(cab3);
+		cout<<"Tiempo peaje 1"<<endl;
+	cout<<tiempo1<<endl;
+		cout<<"Tiempo peaje 2"<<endl;
+	cout<<tiempo2<<endl;
+		cout<<"Tiempo peaje 3"<<endl;
+	cout<<tiempo3<<endl;
+	//Hacemos la comparacion de tiempos y en base a ello se elimina el vehículo correspondiente
+do{
+    cout<<"Ahora digite que quiere ingresar a cualquiera de los tres peajes (Automovil, Carro, Camion)"<<endl;
+    cin.getline(tipovh,10);
+    if (strcmp(tipovh, "Automovil")==0 || strcmp(tipovh, "Moto")==0 || strcmp(tipovh, "Camion")==0) {
+        if (tiempo1 <= tiempo2 && tiempo1 <= tiempo3) {
+            objeto1.agregarElemento(cab1, tipovh);
+            objeto1.retirarElemento(cab1);
+            tiempo1 = objeto1.reconocerElemento(cab1, tipovh);
+        } else if (tiempo2 <= tiempo1 && tiempo2 <= tiempo3) {
+            objeto2.agregarElemento(cab2, tipovh);
+            objeto2.retirarElemento(cab2);
+            tiempo2 = objeto2.reconocerElemento(cab2, tipovh);
+        } else {
+            objeto3.agregarElemento(cab3, tipovh);
+            objeto3.retirarElemento(cab3);
+            tiempo3 = objeto3.reconocerElemento(cab3, tipovh);
+        }
+        cout<<"Peaje 1"<<endl;
+        objeto1.mostrarElementos(cab1);
+        cout<<"Peaje 2"<<endl;
+        objeto2.mostrarElementos(cab2);
+        cout<<"Peaje 3"<<endl;
+        objeto3.mostrarElementos(cab3);
+        cout<<"Tiempo peaje 1"<<endl;
+        cout<<tiempo1<<endl;
+        cout<<"Tiempo peaje 2"<<endl;
+        cout<<tiempo2<<endl;
+        cout<<"Tiempo peaje 3"<<endl;
+        cout<<tiempo3<<endl;
+    } else {
+        cout<<"Tipo de vehiculo no valido"<<endl;
+    }
+} while (true);
+    return 0;
+}
+
